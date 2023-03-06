@@ -7,18 +7,21 @@ function getKoalas(){
     let koalasFromServer = response.data;
     let contentDiv = document.querySelector('#viewKoalas');
     contentDiv.innerHTML = '';
-    for(let koala of koalasFromServer)
+    let i = 0;
+    for(let koala of koalasFromServer) {
       contentDiv.innerHTML += `
       <tr>
-        <td>${koala.id}</td>
+        <td>${i + 1}</td>
         <td>${koala.name}</td>
         <td>${koala.age}</td>
         <td>${koala.gender}</td>
         <td>${koala.readyToTransfer}</td>
         <td>${koala.notes}</td>
-        <td><button id="deleteButton" onClick="deleteKoala(event)">Delete</button><td>
+        <td><button id="deleteButton" onClick="deleteKoala(${i})">Delete</button><td>
       </tr>
       `;
+      i += 1
+    }
   }).catch((error) => {
     console.log(error);
     alert('Something went wrong!')
@@ -60,4 +63,15 @@ function addKoala(event) {
     console.log(error);
     alert('Something went wrong')
   })
+}
+
+function deleteKoala(index) {
+  console.log(`Deleting koala ${index}`);
+  axios.delete(`/koalas/${index}`).then((response) => {
+    console.log(response);
+    getKoalas();
+  }).catch((error) => {
+    console.log(error);
+    alert('Something went wrong')
+  });
 }
