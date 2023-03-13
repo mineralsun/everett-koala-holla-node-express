@@ -91,8 +91,13 @@ koalaRouter.post('/', (req, res) => {
 koalaRouter.delete('/:id', (req, res) => {
     console.log(req.params.id);
     const deleteIndex = Number(req.params.id);
-    koalas = koalas.filter((id, index) => index !== deleteIndex);
-    res.sendStatus(200);
+    let queryText = `DELETE FROM "koalas" WHERE "id" = $1`;
+    pool.query(queryText, [deleteIndex]).then((result) => {
+        res.sendStatus(200);
+    }).catch((error) => {
+        console.log(`Error in DELETE ${error}`);
+        res.sendStatus(500);
+    });
 });
 
 module.exports = koalaRouter;
